@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浏览器小流程 · 自制演示</title>
+<style>
+:root{color-scheme:light;--bg:#f4f2ec;--ink:#20362d;--accent:#287a57;--line:#c7d5ca;--soft:#e5eee6}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Microsoft YaHei",sans-serif}main{max-width:1160px;margin:auto;padding:42px 28px}header{border-top:7px solid var(--accent);padding:24px 0 30px}header p{margin:8px 0}h1{font-size:36px;line-height:1.25;margin:12px 0}h2{font-size:22px;margin:0 0 18px}.eyebrow{color:var(--accent);font-size:14px;letter-spacing:.08em}.scope{padding:10px 14px;background:var(--soft);border-radius:8px}.grid{display:grid;grid-template-columns:1.05fr 1fr;gap:24px}.panel{background:#fcfbf7;border:1px solid var(--line);border-radius:16px;padding:28px}.field{display:block;margin-bottom:18px}.field>span{display:block;font-weight:700;margin-bottom:6px}input[type=text],textarea{width:100%;font:inherit;color:inherit;padding:10px 12px;border:1px solid #819787;border-radius:7px;background:#fffefb}textarea{min-height:130px;resize:vertical}button{font:inherit;cursor:pointer;border:1px solid var(--accent);padding:11px 17px;border-radius:8px;background:var(--accent);color:#f9faf5}button.secondary{background:transparent;color:var(--ink)}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b98f42;outline-offset:3px}.actions{display:flex;gap:12px;flex-wrap:wrap}.check{display:flex;align-items:flex-start;gap:10px;margin:14px 0}.check input{width:18px;height:18px;margin-top:4px;flex-shrink:0}.stats{display:flex;gap:30px;padding:17px 0;border-block:1px solid var(--line);margin:16px 0}.stats strong{font:700 35px/1.2 Consolas,monospace;display:block}.preview{white-space:pre-wrap;background:var(--soft);min-height:140px;border-radius:9px;padding:16px}pre{white-space:pre-wrap;word-break:break-word;font:14px/1.6 Consolas,monospace;padding:16px;background:#20362d;color:#edf4ed;border-radius:9px;min-height:90px}small,.muted{color:#506757}ol{padding-left:24px}footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);font-size:14px}a{color:var(--accent)}#status{min-height:30px;font-weight:700}details{margin-top:16px}summary{cursor:pointer;font-weight:700}@media(max-width:760px){main{padding:22px 16px}.grid{grid-template-columns:1fr}h1{font-size:28px}.panel{padding:20px}}
+</style>
+</head>
+<body><main>
+<header><p class="eyebrow">SELF-MADE DEMO / AI-ASSISTED DEVELOPMENT</p><h1>先确认，再执行。出错就停。</h1><p>一个小的浏览器自动化案例：填写内容 → 核对预览 → 执行演示发布 → 读取回执。</p><p class="scope" data-testid="scope">仅限本演示页面，不连接外部账号。</p></header>
+<div class="grid">
+<section class="panel"><h2>1. 准备一条演示任务</h2>
+<label class="field"><span>任务编号</span><input type="text" id="jobId" maxlength="40" value="demo-001" autocomplete="off"></label>
+<label class="field"><span>任务标题</span><input type="text" id="title" maxlength="60" value="周五产品说明" autocomplete="off"></label>
+<label class="field"><span>任务正文</span><textarea id="body" maxlength="1000">这是一条虚构内容，只在本页面演示任务执行。</textarea></label>
+<button type="button" id="prepare">生成预览</button>
+<div id="preview" class="preview" style="margin-top:18px">先生成预览。修改内容后，需重新确认。</div>
+<label class="check"><input id="approved" type="checkbox"><span>我已核对预览内容</span></label>
+<label class="check"><input id="fail" type="checkbox"><span>模拟接口错误</span></label>
+<div class="actions"><button type="button" id="publish" disabled>执行演示发布</button><button type="button" id="reset" class="secondary">清空演示记录</button></div>
+<p id="status" role="status" data-testid="status">等待预览</p>
+</section>
+<section class="panel"><h2>2. 核对结果</h2><p>这里的“发布”只更新本页内存里的记录，刷新页面即清空。</p>
+<div class="stats"><div><strong data-testid="attempts">0</strong><small>提交尝试</small></div><div><strong data-testid="successes">0</strong><small>成功回执</small></div></div>
+<h2 style="font-size:18px">最近一次回执</h2><pre data-testid="receipt">null</pre>
+<details open><summary>这个案例实际验证什么</summary><ol><li>没有确认过的内容不会执行。</li><li>修改已确认的内容，会撤销确认。</li><li>相同任务编号和内容可复用已有回执。</li><li>发生错误、取消或结果不明时，执行器停止并留下记录。</li></ol></details>
+<p class="muted">这不是Facebook接入或客户项目。实际平台仍需合法账号、明确权限、官方接口或获准的浏览器环境及单独验收。</p>
+</section></div>
+<footer>自制案例，虚构数据，AI辅助开发。<a href="runner.mjs">执行器源码</a> · <a href="README.md">运行与验证说明</a></footer>
+</main>
+<script>
+const el=id=>document.getElementById(id);
+const receiptEl=document.querySelector('[data-testid="receipt"]');
+const attemptsEl=document.querySelector('[data-testid="attempts"]');
+const successesEl=document.querySelector('[data-testid="successes"]');
+let preview=null, attempts=0; const receipts=new Map();
+const payload=()=>({id:el('jobId').value.trim(),title:el('title').value,body:el('body').value});
+const valid=p=>/^[A-Za-z0-9_-]{1,40}$/.test(p.id)&&p.title.trim()&&p.body.trim();
+function invalidate(){preview=null;el('approved').checked=false;el('publish').disabled=true;el('status').textContent='内容已更改，请重新生成预览并确认';}
+for(const id of ['jobId','title','body'])el(id).addEventListener('input',invalidate);
+el('prepare').addEventListener('click',()=>{const p=payload();if(!valid(p)){el('status').textContent='请填写有效编号、标题和正文';return;}preview=JSON.stringify(p);el('preview').textContent=p.title+'\n\n'+p.body;el('approved').checked=false;el('publish').disabled=true;receiptEl.textContent='null';el('status').textContent='预览已生成，等待确认';});
+el('approved').addEventListener('change',()=>{el('publish').disabled=!el('approved').checked||preview!==JSON.stringify(payload());el('status').textContent=el('publish').disabled?'等待确认':'已确认，可以执行演示';});
+el('publish').addEventListener('click',()=>{const p=payload();if(!el('approved').checked||preview!==JSON.stringify(p)){el('status').textContent='确认已失效，停止执行';return;}attempts++;attemptsEl.textContent=String(attempts);let result;if(el('fail').checked){result={status:'error',id:p.id,code:'DEMO_FAILURE',message:'模拟错误：需要人工核对；未生成成功回执'};}else if(receipts.has(p.id)){const prev=receipts.get(p.id);result=prev.title===p.title&&prev.body===p.body?{...prev,replayed:true}:{status:'error',id:p.id,code:'ID_CONFLICT',message:'任务编号已用于其他内容'};}else{result={status:'ok',id:p.id,receipt:'DEMO-'+String(receipts.size+1).padStart(3,'0'),title:p.title,body:p.body,demo:true};receipts.set(p.id,result);successesEl.textContent=String(receipts.size);}receiptEl.textContent=JSON.stringify(result,null,2);el('status').textContent=result.status==='ok'?'演示执行成功：'+result.receipt:'执行停止：'+result.code;});
+el('reset').addEventListener('click',()=>{attempts=0;receipts.clear();attemptsEl.textContent='0';successesEl.textContent='0';receiptEl.textContent='null';preview=null;el('approved').checked=false;el('fail').checked=false;el('publish').disabled=true;el('preview').textContent='先生成预览。修改内容后，需重新确认。';el('status').textContent='等待预览';});
+</script></body></html>
