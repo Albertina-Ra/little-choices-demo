@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="27秒自制图文说明视频，使用虚构订单展示字幕、信息排版和简单转场。非客户案例。">
+  <title>27秒图文说明视频 · 自制样片</title>
+  <style>
+    :root{color-scheme:light;--ink:#17332d;--muted:#62716b;--accent:#2b725b;--line:#dce6df}
+    *{box-sizing:border-box}
+    body{margin:0;background:#f3f6f1;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    .page{max-width:1120px;margin:auto;padding:30px 36px 24px}
+    header{display:flex;align-items:center;gap:10px;font-size:14px;letter-spacing:.06em;color:var(--accent)}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+    main{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,350px);gap:64px;align-items:center;margin:40px 0}
+    .eyebrow{font-size:14px;color:var(--muted);margin:0 0 22px}
+    h1{font-size:clamp(34px,4.7vw,56px);line-height:1.22;letter-spacing:-.04em;margin:0 0 26px;font-weight:800}
+    h1 span{display:block}
+    .lead{max-width:510px;font-size:18px;line-height:1.85;color:var(--muted);margin:0}
+    .tags{display:flex;flex-wrap:wrap;gap:9px;margin:25px 0 34px}
+    .tags span{padding:8px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;background:#fff9}
+    .details{border-top:1px solid var(--line);padding-top:22px;max-width:500px}
+    h2{font-size:17px;margin:0 0 14px}
+    ul{padding-left:20px;margin:0;color:var(--muted);line-height:1.9;font-size:15px}
+    .note{font-size:13px;line-height:1.8;color:var(--muted);margin:23px 0 0;max-width:500px}
+    figure{margin:0;min-width:0}
+    .player{padding:9px;background:#152925;border-radius:26px;box-shadow:0 24px 65px #15392b1c;max-width:350px;margin:auto}
+    video{display:block;width:100%;aspect-ratio:9/16;max-height:72vh;object-fit:contain;border-radius:19px;background:#101b29}
+    figcaption{text-align:center;font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6}
+    footer{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--muted);line-height:1.7}
+    @media(max-width:780px){.page{padding:22px 22px 20px}main{grid-template-columns:1fr;gap:30px;margin:32px 0}.intro{max-width:540px;margin:auto}.lead{font-size:16px}.eyebrow{margin-bottom:16px}h1{margin-bottom:20px}.tags{margin:20px 0 24px}.details{padding-top:18px}figure{width:100%;max-width:350px;margin:auto}video{max-height:none}.note{margin-top:18px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header><span class="dot" aria-hidden="true"></span>自制视频演示</header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">27秒 · 图文说明样片</p>
+        <h1><span>把表格规则</span><span>讲成一段短视频</span></h1>
+        <p class="lead">用一组虚构订单，讲清楚去重、冲突和汇总。这个小例子展示了文字动效、信息排版和简单转场。</p>
+        <div class="tags" aria-label="样片形式"><span>1080P竖屏</span><span>图文讲解</span><span>文字动效</span></div>
+        <div class="details">
+          <h2>样片里能看到</h2>
+          <ul><li>把操作步骤和重点分开呈现</li><li>用数字与表格说明前后变化</li><li>用短转场衔接不同信息</li></ul>
+        </div>
+        <p class="note">实际委托会先确认素材、参考风格、成片时长、交付格式和修改范围。样片为自行制作的图文说明，不代表已有工厂或探店客户案例。</p>
+      </section>
+      <figure>
+        <div class="player"><video controls playsinline preload="metadata" poster="poster.jpg" aria-label="播放27秒自制订单整理说明样片"><source src="sample.mp4" type="video/mp4">浏览器暂不支持内嵌播放，可打开<a href="sample.mp4">MP4样片</a>。</video></div>
+        <figcaption>点击播放 · 建议打开声音听完整节奏</figcaption>
+      </figure>
+    </main>
+    <footer><span>自制演示，非客户案例</span><span>数据虚构 · 使用AI辅助制作</span></footer>
+  </div>
+</body>
+</html>
